@@ -52,6 +52,7 @@ class Jugador(models.Model):
     nacionalidad = models.CharField('Nacionalidad', max_length=20, null=True, blank=True)
     fecha_nacimiento = models.DateField('Fecha de nacimiento', null=True, blank=True)
     equipo = models.ForeignKey(Equipo, related_name='jugadores', on_delete=models.SET_NULL, null=True, blank=True)
+    precio =models.PositiveSmallIntegerField('Precio', null=True, blank=True)
 
     def __str__(self):
         return self.nombre_abreviado + " " + self.posicion + " " + str(self.equipo)
