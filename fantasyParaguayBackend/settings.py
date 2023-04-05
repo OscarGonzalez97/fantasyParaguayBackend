@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'auth_fantasy',
 ]
 
+
+AUTH_USER_MODEL = 'auth_fantasy.Usuario'
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
