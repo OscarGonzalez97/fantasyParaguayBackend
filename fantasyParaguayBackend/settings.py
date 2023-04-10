@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'fantasy',
     'auth_fantasy',
+    'drf_yasg',
 ]
 
 
