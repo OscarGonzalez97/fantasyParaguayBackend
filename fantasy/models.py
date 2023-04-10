@@ -1,5 +1,4 @@
 from django.db import models
-
 from auth_fantasy.models import Usuario
 
 
