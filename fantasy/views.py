@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
@@ -20,10 +21,13 @@ class JugadorList(generics.ListAPIView):
     filterset_fields = ['posicion']
 
 
-
-
-
 class PartidoList(generics.ListAPIView):
     queryset = Partido.objects.all()
     serializer_class = PartidoSerializer
 
+
+def SyncJugador(request):
+    #GET de la api rapid api
+    # ir guardanado todo en nuestro modelo Juagdor
+    # Jugador.objects.create()
+    return HttpResponse("Jugadores sincronizados!")

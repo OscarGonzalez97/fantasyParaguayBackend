@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import TorneoList, JugadorList, PartidoList
+from .views import TorneoList, JugadorList, PartidoList, SyncJugador
 
 urlpatterns = [
     path('api/', include([
@@ -8,4 +8,5 @@ urlpatterns = [
         path('jugadores/', JugadorList.as_view(), name='jugador-list'),
         path('partidos/', PartidoList.as_view(), name='partido-list'),
     ])),
+    path('sincronizar-jugadores/', SyncJugador, name='sync-jugador'),
 ]
