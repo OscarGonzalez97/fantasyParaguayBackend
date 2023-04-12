@@ -1,8 +1,7 @@
-from django.shortcuts import render
-
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, filters
+from rest_framework.permissions import AllowAny
+
 from .models import Torneo, Jugador, Partido
 from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer
 
