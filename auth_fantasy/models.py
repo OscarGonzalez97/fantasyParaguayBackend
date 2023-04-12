@@ -22,6 +22,5 @@ class Usuario(AbstractUser):
         return self.full_name
 
     def save(self, *args, **kwargs):
-        self.full_name = f'{self.first_name} {self.last_name}'
         self.username = self.email
         super().save(*args, **kwargs)
