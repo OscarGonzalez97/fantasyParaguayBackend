@@ -9,9 +9,14 @@ class TorneoSerializer(serializers.ModelSerializer):
 
 
 class JugadorSerializer(serializers.ModelSerializer):
+    equipo = serializers.StringRelatedField()
+
     class Meta:
         model = Jugador
         fields = '__all__'
+        extra_kwargs = {
+            'equipo': {'source': 'Equipo.nombre'}  # campo relacionado como el nombre en lugar del id
+        }
 
 
 class PartidoSerializer(serializers.ModelSerializer):
