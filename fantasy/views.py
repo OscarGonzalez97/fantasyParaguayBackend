@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from rest_framework import generics
+from rest_framework.permissions import AllowAny
 from .models import Torneo, Jugador, Partido
 from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer
 
@@ -11,7 +12,9 @@ class TorneoList(generics.ListAPIView):
 
 
 class JugadorList(generics.ListAPIView):
-    queryset = Jugador.objects.all()
+    permission_classes = [AllowAny]
+
+    queryset = Jugador.objects.exclude(equipo=None)
     serializer_class = JugadorSerializer
 
 
