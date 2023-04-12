@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Torneo, Jugador, Partido
 from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer
 
@@ -16,6 +17,11 @@ class JugadorList(generics.ListAPIView):
 
     queryset = Jugador.objects.exclude(equipo=None)
     serializer_class = JugadorSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['posicion']
+
+
+
 
 
 class PartidoList(generics.ListAPIView):

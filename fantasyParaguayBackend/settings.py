@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',  # seguridad
+    'django_filters',
     'fantasy',
     'auth_fantasy',
     'drf_yasg',  # swagger
