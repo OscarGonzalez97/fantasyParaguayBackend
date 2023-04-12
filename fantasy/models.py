@@ -92,6 +92,7 @@ class EquipoUsuario(models.Model):
     torneo = models.ForeignKey(Torneo, related_name='equipos_usuarios', on_delete=models.CASCADE)
     jugadores = models.ManyToManyField(Jugador, related_name='equipos')
     gasto_total = models.SmallIntegerField(default=0)
+    nombre_equipo = models.CharField('Nombre de equipo', max_length=100, default=True, blank=True)
 
     class Meta:
         unique_together = ('usuario', 'torneo',)
