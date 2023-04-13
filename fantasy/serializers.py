@@ -23,6 +23,8 @@ class PartidoSerializer(serializers.ModelSerializer):
     equipo_local = serializers.StringRelatedField()
     equipo_visitante = serializers.StringRelatedField()
     torneo_nombre = serializers.CharField(source='torneo.nombre', read_only=True)
+    equipo_local_imagen = serializers.URLField(source='equipo_local.logo', read_only=True)
+    equipo_visitante_imagen = serializers.URLField(source='equipo_visitante.logo', read_only=True)
 
     class Meta:
         model = Partido
@@ -38,7 +40,6 @@ class LigaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Liga
         fields = '__all__'
-
 
 
 class LigaCreateSerializer(serializers.ModelSerializer):
