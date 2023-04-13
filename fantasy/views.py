@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import Torneo, Jugador, Partido
-from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer
+from .models import Torneo, Jugador, Partido, Liga
+from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer, LigaSerializer, LigaCreateSerializer
 
 
 class TorneoList(generics.ListAPIView):
@@ -26,6 +26,23 @@ class PartidoList(generics.ListAPIView):
 
     queryset = Partido.objects.all()
     serializer_class = PartidoSerializer
+
+
+class LigaList(generics.ListAPIView):
+    permission_classes = [AllowAny]
+
+    queryset = Liga.objects.all()
+    serializer_class = LigaSerializer
+
+
+class LigaCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    queryset = Liga.objects.all()
+    serializer_class = LigaCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creado_por=self.request.user)
 
 
 def SyncJugador(request):

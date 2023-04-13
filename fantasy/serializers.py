@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Jugador, Torneo, Partido
+from .models import Jugador, Torneo, Partido, Liga
 
 
 class TorneoSerializer(serializers.ModelSerializer):
@@ -22,6 +22,8 @@ class JugadorSerializer(serializers.ModelSerializer):
 class PartidoSerializer(serializers.ModelSerializer):
     equipo_local = serializers.StringRelatedField()
     equipo_visitante = serializers.StringRelatedField()
+    torneo_nombre = serializers.CharField(source='torneo.nombre', read_only=True)
+
     class Meta:
         model = Partido
         fields = '__all__'
@@ -29,3 +31,17 @@ class PartidoSerializer(serializers.ModelSerializer):
             'equipo_local': {'source': 'Equipo.nombre'},
             'equipo_visitante': {'source': 'Equipo.nombre'}
         }
+
+
+class LigaSerializer(serializers.ModelSerializer):
+    creado_por_nombre = serializers.CharField(source='creado_por.full_name', read_only=True)
+    class Meta:
+        model = Liga
+        fields = '__all__'
+
+
+
+class LigaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Liga
+        fields = ['nombre', 'privado']
