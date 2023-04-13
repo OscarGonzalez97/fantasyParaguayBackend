@@ -151,7 +151,9 @@ class Liga(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.codigo:
-            self.codigo = str(uuid.uuid4())
+            hashed = hash(uuid.uuid4())
+            uid_7 = str(hashed)[1:8]
+            self.codigo = str(uid_7)
         super().save(*args, **kwargs)
 
     def __str__(self):
