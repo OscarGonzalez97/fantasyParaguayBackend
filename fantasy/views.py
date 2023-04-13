@@ -22,6 +22,8 @@ class JugadorList(generics.ListAPIView):
 
 
 class PartidoList(generics.ListAPIView):
+    permission_classes = [AllowAny]
+
     queryset = Partido.objects.all()
     serializer_class = PartidoSerializer
 

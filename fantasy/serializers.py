@@ -20,6 +20,12 @@ class JugadorSerializer(serializers.ModelSerializer):
 
 
 class PartidoSerializer(serializers.ModelSerializer):
+    equipo_local = serializers.StringRelatedField()
+    equipo_visitante = serializers.StringRelatedField()
     class Meta:
         model = Partido
         fields = '__all__'
+        extra_kwargs = {
+            'equipo_local': {'source': 'Equipo.nombre'},
+            'equipo_visitante': {'source': 'Equipo.nombre'}
+        }
