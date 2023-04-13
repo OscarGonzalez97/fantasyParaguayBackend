@@ -150,7 +150,7 @@ class Liga(models.Model):
     codigo = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.codigo and self.pk:
+        if not self.codigo:
             self.codigo = str(uuid.uuid4())
         super().save(*args, **kwargs)
 
