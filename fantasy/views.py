@@ -1,10 +1,12 @@
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, filters
+from rest_framework import generics, filters, viewsets
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import Torneo, Jugador, Partido, Liga
-from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer, LigaSerializer, LigaCreateSerializer
+from .models import Torneo, Jugador, Partido, Liga, EquipoUsuario, LigaUsuario
+from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer, LigaSerializer, LigaCreateSerializer, \
+    EquipoUsuarioSerializer, EquipoUsuarioCreateSerializer, LigaUsuarioCreateSerializer
 
 
 class TorneoList(generics.ListAPIView):
@@ -29,6 +31,7 @@ class PartidoList(generics.ListAPIView):
 
 
 class LigaList(generics.ListAPIView):
+    """Listar todas las ligas"""
     permission_classes = [AllowAny]
 
     queryset = Liga.objects.all()
@@ -43,6 +46,38 @@ class LigaCreate(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(creado_por=self.request.user)
+
+
+class LigaUnirme(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    queryset = LigaUsuario.objects.all()
+    serializer_class = LigaUsuarioCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
+class EquipoUsuarioList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EquipoUsuarioSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        # todo: por ahora solo va poder traer un equipo el del unico torneo, esto va cambiar despues
+        queryset = EquipoUsuario.objects.filter(usuario=user, torneo=Torneo.objects.all().first())
+        return queryset
+
+
+class EquipoUsuarioCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = EquipoUsuario.objects.all()
+    serializer_class = EquipoUsuarioCreateSerializer
+
+    def perform_create(self, serializer):
+        # todo: torneo fijo temporalmente, mas adelante podra haber mas de un torneo o se va mandar como param
+        serializer.save(creado_por=self.request.user, torneo=Torneo.objects.all().first())
+
 
 
 def SyncJugador(request):
