@@ -166,3 +166,5 @@ class LigaUsuario(models.Model):
     liga = models.ForeignKey(Liga, on_delete=models.CASCADE)
     puntos = models.SmallIntegerField(default=0)
 
+    class Meta:
+        unique_together = ('usuario', 'liga',)
