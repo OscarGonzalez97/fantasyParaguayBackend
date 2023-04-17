@@ -43,7 +43,7 @@ class Jugador(models.Model):
         ('POR', 'Portero'),
     )
     id_api = models.PositiveIntegerField('ID API', unique=True, null=True, blank=True)
-    nombre_abreviado = models.CharField('Nombre abreviado', max_length=16)
+    nombre_abreviado = models.CharField('Nombre abreviado', max_length=25)
     nombre = models.CharField('Nombre', max_length=70)
     apellido = models.CharField('Apellido', max_length=70)
     posicion = models.CharField('Posicion', choices=POSICION, max_length=10)

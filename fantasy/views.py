@@ -7,6 +7,7 @@ from .models import Torneo, Jugador, Partido, Liga, EquipoUsuario, LigaUsuario
 from .serializers import TorneoSerializer, JugadorSerializer, PartidoSerializer, LigaSerializer, LigaCreateSerializer, \
     EquipoUsuarioSerializer, EquipoUsuarioCreateSerializer, LigaUsuarioCreateSerializer, BuscarJugadorSerializer
 
+import requests
 
 class TorneoList(generics.ListAPIView):
     queryset = Torneo.objects.all()
@@ -86,7 +87,87 @@ class EquipoUsuarioCreate(generics.CreateAPIView):
 
 
 def SyncJugador(request):
-    #GET de la api rapid api
-    # ir guardanado todo en nuestro modelo Juagdor
-    # Jugador.objects.create()
+    # GET de la api rapid api
+    # llamada a la API con ciclo for guardando la cantidad de pag y especificando pag actual = 1, fin del for
+    # for de 2 hasta total de pag, 28
+    # for de 2 a 28, request más nuevo parámetro de pag.
+    url = "https://api-football-beta.p.rapidapi.com/players"
+    querystring = {"season": "2023", "league": "250"}
+
+    headers = {
+        "X-RapidAPI-Key": "e1c42450b7mshfccc731f01303b8p1c67fcjsn808c5f34eae9",
+        "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com"
+    }
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+
+    data = response.json()
+    pages = data["paging"]["total"]
+
+    for player in data["response"]:
+        posicion = player["statistics"][0]["games"]["position"]
+        if posicion == 'Defender':
+            posicion = "DEF"
+        elif posicion == 'Midfielder':
+            posicion = "MED"
+        elif posicion == 'Goalkeeper':
+            posicion = "POR"
+        elif posicion == 'Attacker':
+            posicion = "DEL"
+
+        jugador = Jugador.objects.create(
+            id_api=int(player["player"]["id"]),
+            nombre_abreviado=player["player"]["name"][0:25],
+            nombre=player["player"]["firstname"],
+            apellido=player["player"]["lastname"],
+            fecha_nacimiento=player["player"]["birth"]["date"],
+            nacionalidad=player["player"]["nationality"],
+            peso=float(player["player"]["weight"].split(" ")[0]) if player["player"]["weight"] else 0,
+            altura=float(player["player"]["height"].split(" ")[0]) if player["player"]["height"] else 0,
+            foto=player["player"]["photo"],
+            posicion=posicion,
+            lesionado=player["player"]["injured"],
+        )
+        jugador.save()
+
+    # a partir del 1er request se empiezan a buscar todas las demas paginas
+    # for pagina in range(2, pages):
+    #     url = "https://api-football-beta.p.rapidapi.com/players"
+    #     querystring = {"season": "2023", "league": "250", "page": pagina}
+    #
+    #     headers = {
+    #         "X-RapidAPI-Key": "e1c42450b7mshfccc731f01303b8p1c67fcjsn808c5f34eae9",
+    #         "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com"
+    #     }
+    #
+    #     response = requests.request("GET", url, headers=headers, params=querystring)
+    #
+    #     data = response.json()
+    #
+    #     for player in data["response"]:
+    #         posicion = player["statistics"][0]["games"]["position"]
+    #         if posicion == 'Defender':
+    #             posicion = "DEF"
+    #         elif posicion == 'Midfielder':
+    #             posicion = "MED"
+    #         elif posicion == 'Goalkeeper':
+    #             posicion = "POR"
+    #         elif posicion == 'Attacker':
+    #             posicion = "DEL"
+    #
+    #         jugador = Jugador.objects.create(
+    #             id_api=int(player["player"]["id"]),
+    #             nombre_abreviado=player["player"]["name"],
+    #             nombre=player["player"]["firstname"],
+    #             apellido=player["player"]["lastname"],
+    #             fecha_nacimiento=player["player"]["birth"]["date"],
+    #             nacionalidad=player["player"]["nationality"],
+    #             peso=float(player["player"]["height"].split(" ")[0]),
+    #             altura=float(player["player"]["weight"].split(" ")[0]),
+    #             foto=player["player"]["photo"],
+    #             posicion=posicion,
+    #             lesionado=player["player"]["injured"],
+    #         )
+    #         jugador.save()
+
     return HttpResponse("Jugadores sincronizados!")
