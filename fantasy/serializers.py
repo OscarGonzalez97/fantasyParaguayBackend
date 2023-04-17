@@ -10,7 +10,7 @@ class TorneoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class JugadorSerializer(serializers.ModelSerializer):
+class BuscarJugadorSerializer(serializers.ModelSerializer):
     equipo = serializers.StringRelatedField()
 
     class Meta:
