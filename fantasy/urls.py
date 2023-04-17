@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import TorneoList, JugadorList, PartidoList, SyncJugador, LigaList, LigaCreate, EquipoUsuarioCreate, \
-    EquipoUsuarioList, LigaUnirme
+    EquipoUsuarioList, LigaUnirme, SyncEquipo
 
 urlpatterns = [
     path('api/', include([
@@ -20,4 +20,5 @@ urlpatterns = [
         ])),
     ])),
     path('sincronizar-jugadores/', SyncJugador, name='sync-jugador'),
+    path('sincronizar-equipos/', SyncEquipo, name='sync-equipo'),
 ]
