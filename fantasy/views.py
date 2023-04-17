@@ -95,9 +95,10 @@ def SyncJugador(request):
     # for de 2 a 28, request más nuevo parámetro de pag.
     url = "https://api-football-beta.p.rapidapi.com/players"
     querystring = {"season": "2023", "league": "250"}
+    api_key = ""
 
     headers = {
-        "X-RapidAPI-Key": "e1c42450b7mshfccc731f01303b8p1c67fcjsn808c5f34eae9",
+        "X-RapidAPI-Key": api_key,
         "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com"
     }
 
@@ -120,7 +121,10 @@ def SyncJugador(request):
         jugador = Jugador.objects.filter(id_api=int(player["player"]["id"])).first()
         try:
             equipo = Equipo.objects.filter(id_api=int(player["statistics"][0]["team"]["id"])).first()
+        except Equipo.DoesNotExist:
+            equipo = None
         except Exception as e:
+            print(e)
             equipo = None
         if not jugador:
             jugador = Jugador.objects.create(
@@ -152,7 +156,7 @@ def SyncJugador(request):
         querystring = {"season": "2023", "league": "250", "page": pagina}
 
         headers = {
-            "X-RapidAPI-Key": "e1c42450b7mshfccc731f01303b8p1c67fcjsn808c5f34eae9",
+            "X-RapidAPI-Key": api_key,
             "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com"
         }
 
@@ -172,7 +176,13 @@ def SyncJugador(request):
                 posicion = "DEL"
 
             jugador = Jugador.objects.filter(id_api=int(player["player"]["id"])).first()
-            equipo = Equipo.objects.get(id_api=int(player["statistics"][0]["team"]["id"]))
+            try:
+                equipo = Equipo.objects.filter(id_api=int(player["statistics"][0]["team"]["id"])).first()
+            except Equipo.DoesNotExist:
+                equipo = None
+            except Exception as e:
+                print(e)
+                equipo = None
             if not jugador:
                 jugador = Jugador.objects.create(
                     id_api=int(player["player"]["id"]),
