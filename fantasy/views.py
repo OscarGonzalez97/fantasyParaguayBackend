@@ -117,7 +117,10 @@ def SyncJugador(request):
             posicion = "DEL"
 
         jugador = Jugador.objects.filter(id_api=int(player["player"]["id"])).first()
-        equipo = Equipo.objects.get(id_api=int(player["statistics"][0]["team"]["id"]))
+        try:
+            equipo = Equipo.objects.get(id_api=int(player["statistics"][0]["team"]["id"]))
+        except Equipo.DoesNotExist:
+            equipo = None
         if not jugador:
             jugador = Jugador.objects.create(
                 id_api=int(player["player"]["id"]),
